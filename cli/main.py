@@ -231,7 +231,7 @@ def main():
     p_extract = subparsers.add_parser("extract", help="Extract modular glTF 2.0 models for a character")
     p_extract.add_argument("character_id", help="Character ID (e.g. 1001, 1007, or 1001_00)")
     p_extract.add_argument("-o", "--out", help="Output directory", default="./exports")
-    p_extract.add_argument("--body", help="Body costume ID", default="0002_00")
+    p_extract.add_argument("--body", help="Body costume ID (default: auto)", default="auto")
     p_extract.add_argument("--tail", help="Tail ID", default="0001_00")
     p_extract.add_argument("--modular-only", action="store_true", help="Skip combined assembled.glb generation")
 

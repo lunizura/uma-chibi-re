@@ -4,6 +4,8 @@ __pycache__/
 *$py.class
 
 # 3D assets & exports (Strictly no game models uploaded to git)
+assets/
+extracted_assets/
 exports/
 temp_output/
 output*/

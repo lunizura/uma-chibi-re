@@ -133,8 +133,15 @@ class ChibiPipeline:
         clean_id = chara_id.replace("mchr", "")
         # If user passes 1001, normalize to 1001_00
         tag_id = clean_id if "_" in clean_id else f"{clean_id}_00"
+        base_num = tag_id.split("_")[0]
 
         with self.meta_db as db:
+            # Resolve body: if 'auto', check for signature costume first
+            actual_body_id = body_id
+            if body_id == "auto" or body_id is None:
+                sig_body = db.find_assets(f"%mini/body/mbdy{tag_id}%pfb%")
+                actual_body_id = tag_id if sig_body else "0002_00"
+
             # 1. HAIR
             hair_records = db.find_assets(f"%mini/head/mchr{tag_id}%pfb%hair%")
             hair_mat_records = db.find_assets(f"%mini/head/mchr{tag_id}%materials%hair%")
@@ -151,8 +158,14 @@ class ChibiPipeline:
                 results["hair"] = hair_glb
 
             # 2. BODY
-            body_records = db.find_assets(f"%mini/body/mbdy{body_id}%pfb%00_0%")
-            body_tex_records = db.find_assets(f"%mini/body/mbdy{body_id}%diff%")
+            body_records = db.find_assets(f"%mini/body/mbdy{actual_body_id}%pfb_mbdy{actual_body_id}%")
+            if not body_records:
+                body_records = db.find_assets(f"%mini/body/mbdy{actual_body_id}%pfb%")
+
+            body_tex_records = db.find_assets(f"%mini/body/mbdy{actual_body_id}%diff%")
+            if not body_tex_records:
+                body_tex_records = db.find_assets(f"%materials/mtl_mbdy{actual_body_id}%")
+
             if body_records:
                 body_meshes, _ = self.extract_bundle_assets(body_records[0])
                 body_textures = []
@@ -160,7 +173,7 @@ class ChibiPipeline:
                     _, body_textures = self.extract_bundle_assets(body_tex_records[0])
 
                 body_glb = self.compile_modular_glb(
-                    body_meshes, body_textures, out_dir / "body.glb", f"Chibi_Body_{body_id}"
+                    body_meshes, body_textures, out_dir / "body.glb", f"Chibi_Body_{actual_body_id}"
                 )
                 results["body"] = body_glb
 
@@ -180,7 +193,10 @@ class ChibiPipeline:
 
             # 4. TAIL
             tail_records = db.find_assets(f"%mini/tail/mtail{tail_id}%pfb_mtail%")
-            tail_tex_records = db.find_assets(f"%mini/tail/mtail{tail_id}%1001_diff%")
+            tail_tex_records = db.find_assets(f"%mini/tail/mtail{tail_id}%{base_num}_diff%")
+            if not tail_tex_records:
+                tail_tex_records = db.find_assets(f"%mini/tail/mtail{tail_id}%1001_diff%")
+
             if tail_records:
                 tail_meshes, _ = self.extract_bundle_assets(tail_records[0])
                 tail_textures = []
