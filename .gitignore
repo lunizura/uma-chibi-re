@@ -1,0 +1,29 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 3D assets & exports (Strictly no game models uploaded to git)
+exports/
+temp_output/
+output*/
+*.glb
+*.gltf
+*.obj
+*.fbx
+*.bin
+
+# Environment & caches
+.env
+.venv/
+env/
+venv/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.log

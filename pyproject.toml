@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "uma-chibi-re"
+version = "1.0.0"
+description = "Offline Reverse Engineering & Modular glTF 2.0 3D Asset Pipeline for Umamusume: Pretty Derby Chibi Models"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [
+    { name = "lunizura (izu)" }
+]
+keywords = [
+    "reverse-engineering",
+    "umamusume",
+    "unityfs",
+    "gltf",
+    "3d-modeling",
+    "game-modding",
+    "sqlite3mc",
+    "aes-256-cbc"
+]
+dependencies = [
+    "numpy>=1.24.0",
+    "Pillow>=9.5.0",
+    "UnityPy>=1.25.0",
+    "rich>=13.0.0",
+    "lz4>=4.3.0"
+]
+
+[project.scripts]
+uma-chibi = "cli.main:main"
