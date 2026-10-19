@@ -50,7 +50,7 @@ class GLTFBuilder:
         self.buffer_views.append(view)
         return view_idx
 
-    def add_texture_png(self, png_bytes: bytes, name: str = "Texture") -> int:
+    def add_texture_png(self, png_bytes: bytes, name: str = "Texture", alpha_mode: str = "OPAQUE") -> int:
         """Embeds a PNG texture directly into the glb binary payload."""
         view_idx = self._add_buffer_view(png_bytes)
         
@@ -77,7 +77,7 @@ class GLTFBuilder:
         })
 
         mat_idx = len(self.materials)
-        self.materials.append({
+        mat = {
             "name": f"{name}_Material",
             "pbrMetallicRoughness": {
                 "baseColorTexture": {"index": tex_idx},
@@ -85,7 +85,11 @@ class GLTFBuilder:
                 "roughnessFactor": 0.85,
             },
             "doubleSided": True,
-        })
+        }
+        if alpha_mode != "OPAQUE":
+            mat["alphaMode"] = alpha_mode
+
+        self.materials.append(mat)
         return mat_idx
 
     def add_mesh(
@@ -97,10 +101,15 @@ class GLTFBuilder:
         colors: Optional[list[tuple[float, float, float, float]]] = None,
         material_index: Optional[int] = None,
         name: str = "ChibiMesh",
+        offset: Optional[tuple[float, float, float]] = None,
     ) -> int:
         """
         Encodes a 3D submesh with positions, triangle indices, normals, UVs, and vertex colors.
         """
+        if offset is not None:
+            ox, oy, oz = offset
+            positions = [(p[0] + ox, p[1] + oy, p[2] + oz) for p in positions]
+
         attributes = {}
 
         # 1. POSITIONS (Vec3, Float32)
