@@ -1,5 +1,6 @@
 # uma-chibi-re
 
+[![CI](https://github.com/lunizura/uma-chibi-re/actions/workflows/ci.yml/badge.svg)](https://github.com/lunizura/uma-chibi-re/actions)
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Format: glTF 2.0](https://img.shields.io/badge/glTF-2.0%20Compliant-green.svg)](https://www.khronos.org/gltf/)
